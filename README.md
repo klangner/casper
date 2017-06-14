@@ -1,0 +1,1 @@
+# Web scraper for Polish Law Acts
