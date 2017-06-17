@@ -6,6 +6,7 @@ import com.github.tototoshi.csv.CSVWriter
 import net.ruippeixotog.scalascraper.browser.JsoupBrowser
 import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
+import net.ruippeixotog.scalascraper.model.Document
 
 
 /**Pobieranie dzienników ustaw */
@@ -25,7 +26,7 @@ object DziennikUstawScraper {
   }
 
   def scrapAllYear(): Seq[String] = {
-    val doc = browser.get(SITE_URL + "VolumeServlet?type=wdu")
+    val doc = loadDocument(SITE_URL + "VolumeServlet?type=wdu")
     (doc >> elementList(".cel_black11"))
       .map(node => node >> attr("href"))
       .filter(_.contains("rok"))
@@ -33,7 +34,7 @@ object DziennikUstawScraper {
 
   /** Return links for all sections in given year */
   def scrapYear(link: String): Seq[String] = {
-    val doc = browser.get(SITE_URL + link)
+    val doc = loadDocument(SITE_URL + link)
     (doc >> elementList(".cel_black11"))
       .map(node => node >> attr("href"))
       .filter(_.contains("rok"))
@@ -41,7 +42,8 @@ object DziennikUstawScraper {
 
   /** Return list of links for a given section */
   def scrapSection(link: String): Seq[String] = {
-    val doc = browser.get(SITE_URL + link)
+    println(link)
+    val doc = loadDocument(SITE_URL + link)
     (doc >> elementList("a"))
       .map(node => (node >?> attr("href")).getOrElse(""))
       .filter(_.contains("DetailsServlet?id="))
@@ -50,7 +52,7 @@ object DziennikUstawScraper {
   def scrapDetails(link: String): DziennikUstaw = {
     val id = link.substring(link.indexOf("id=")+3)
     val docUrl = SITE_URL + link
-    val doc = browser.get(docUrl)
+    val doc = loadDocument(docUrl)
     val pdfLink = (doc >> elementList("a"))
       .map(node => (node >?> attr("href")).getOrElse(""))
       .find(_.contains("Download"))
@@ -60,9 +62,13 @@ object DziennikUstawScraper {
   }
 
   def save(xs: Seq[DziennikUstaw]): Unit = {
-    val writer = CSVWriter.open(new File("data/ustawy.csv"))
+    val writer = CSVWriter.open(new File("data/dziennik-ustaw/resources.csv"))
     writer.writeRow(List("id", "pdf"))
     xs.foreach(x => writer.writeRow(List(x.id, x.pdf.getOrElse(""))))
     writer.close()
+  }
+
+  def loadDocument(link: String): Document = {
+    browser.get(link)
   }
 }
