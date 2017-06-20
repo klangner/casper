@@ -1,4 +1,4 @@
-# Web scraper for Polish Legal Acts
+# Web scraper dla polskich aktów prawnych
 
 ## Lista dostępny dokumentów
 
@@ -24,3 +24,15 @@
    * Przegląd Podatkowy
    * Przegląd Prawa Handlowego
    * Samorząd Terytorialny 
+   
+   
+## Jak to działa
+
+### Pobranie danych
+ * Pobranie informacji o dostępnych zasobach i zapisanie jej w pliku resource.csv
+ * Pobranie zasobów (np. plików pdf)
+ * Zamian pliku pdf na tekst lub obrazek (niektóre są skanami)
+ * OCR na obrazkach by otrzymać tekst
+
+### Tworzenie bazy wiedzy
+ * Utworzenie indeksu
