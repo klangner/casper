@@ -1,4 +1,4 @@
-name := "scraper-ap"
+name := "casper"
 
 version := "1.0"
 

@@ -1,4 +1,12 @@
-package pl.klangner.scraper
+/**
+  * Web Scraper for:
+  * Internetowy System Aktów Prawny
+  *
+  * Zawiera:
+  *   * Dzienniki Ustaw
+  *   * Monitory Polskie
+  */
+package pl.klangner.casper
 
 import java.io.File
 
@@ -9,24 +17,35 @@ import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.Document
 
 
-/**Pobieranie dzienników ustaw */
-object DziennikUstawScraper {
+object Isap {
 
   val SITE_URL = "http://isap.sejm.gov.pl/"
   val browser = JsoupBrowser()
 
   case class DziennikUstaw(id: String, url: String, pdf: Option[String])
 
-  def scrap(): Unit = {
-    val xs = scrapAllYear()
+  def scrapDziennikUstaw(): Unit = {
+    val xs = scrapAllYear("wdu")
       .flatMap(scrapYear)
       .flatMap(scrapSection)
       .map(scrapDetails)
-    save(xs)
+    save("data/dziennik-ustaw/", xs)
   }
 
-  def scrapAllYear(): Seq[String] = {
-    val doc = loadDocument(SITE_URL + "VolumeServlet?type=wdu")
+  def scrapMonitorPolski(): Unit = {
+    val xs = scrapAllYear("wmp")
+      .flatMap(scrapYear)
+      .flatMap(scrapSection)
+      .map(scrapDetails)
+    save("data/monitor-polski/", xs)
+  }
+
+  def loadDocument(link: String): Document = {
+    browser.get(link)
+  }
+
+  def scrapAllYear(docType: String): Seq[String] = {
+    val doc = loadDocument(SITE_URL + "VolumeServlet?type=" + docType)
     (doc >> elementList(".cel_black11"))
       .map(node => node >> attr("href"))
       .filter(_.contains("rok"))
@@ -61,14 +80,11 @@ object DziennikUstawScraper {
     DziennikUstaw(id, docUrl, pdfLink)
   }
 
-  def save(xs: Seq[DziennikUstaw]): Unit = {
-    val writer = CSVWriter.open(new File("data/dziennik-ustaw/resources.csv"))
+  def save(folder: String, xs: Seq[DziennikUstaw]): Unit = {
+    val writer = CSVWriter.open(new File(folder + "resources.csv"))
     writer.writeRow(List("id", "pdf"))
     xs.foreach(x => writer.writeRow(List(x.id, x.pdf.getOrElse(""))))
     writer.close()
   }
 
-  def loadDocument(link: String): Document = {
-    browser.get(link)
-  }
 }

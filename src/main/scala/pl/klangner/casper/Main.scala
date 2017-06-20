@@ -1,4 +1,4 @@
-package pl.klangner.scraper
+package pl.klangner.casper
 
 /**
   * Created by Krzysztof Langner on 2017-06-14.
@@ -6,6 +6,7 @@ package pl.klangner.scraper
 object Main {
 
   def main(args: Array[String]): Unit = {
-    DziennikUstawScraper.scrap()
+//    Isap.scrapDziennikUstaw()
+    Isap.scrapMonitorPolski()
   }
 }
