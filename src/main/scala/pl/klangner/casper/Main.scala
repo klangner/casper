@@ -7,6 +7,7 @@ object Main {
 
   def main(args: Array[String]): Unit = {
 //    Isap.scrapDziennikUstaw()
-    Isap.scrapMonitorPolski()
+//    Isap.scrapMonitorPolski()
+    ResourceDownloader.downloadAllResources("data")
   }
 }

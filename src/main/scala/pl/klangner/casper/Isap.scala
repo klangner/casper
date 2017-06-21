@@ -16,6 +16,8 @@ import net.ruippeixotog.scalascraper.dsl.DSL.Extract._
 import net.ruippeixotog.scalascraper.dsl.DSL._
 import net.ruippeixotog.scalascraper.model.Document
 
+import scala.util.Try
+
 
 object Isap {
 
@@ -41,7 +43,7 @@ object Isap {
   }
 
   def loadDocument(link: String): Document = {
-    browser.get(link)
+      Try(browser.get(link)).getOrElse(loadDocument(link))
   }
 
   def scrapAllYear(docType: String): Seq[String] = {
@@ -81,7 +83,7 @@ object Isap {
   }
 
   def save(folder: String, xs: Seq[DziennikUstaw]): Unit = {
-    val writer = CSVWriter.open(new File(folder + "resources.csv"))
+    val writer = CSVWriter.open(new File(folder + "resources2.csv"))
     writer.writeRow(List("id", "pdf"))
     xs.foreach(x => writer.writeRow(List(x.id, x.pdf.getOrElse(""))))
     writer.close()
