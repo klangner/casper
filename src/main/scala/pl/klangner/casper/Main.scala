@@ -8,6 +8,7 @@ object Main {
   def main(args: Array[String]): Unit = {
 //    Isap.scrapDziennikUstaw("data/dziennik-ustaw")
 //    Isap.scrapMonitorPolski("data/monitor-polski")
-    ResourceDownloader.downloadAllResources("data")
+//    ResourceDownloader.downloadAllResources("data")
+    PdfParser.parseAllFiles("data")
   }
 }
