@@ -6,8 +6,8 @@ package pl.klangner.casper
 object Main {
 
   def main(args: Array[String]): Unit = {
-//    Isap.scrapDziennikUstaw()
-//    Isap.scrapMonitorPolski()
+//    Isap.scrapDziennikUstaw("data/dziennik-ustaw")
+//    Isap.scrapMonitorPolski("data/monitor-polski")
     ResourceDownloader.downloadAllResources("data")
   }
 }

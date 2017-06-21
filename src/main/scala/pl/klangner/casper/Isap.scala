@@ -26,20 +26,20 @@ object Isap {
 
   case class DziennikUstaw(id: String, url: String, pdf: Option[String])
 
-  def scrapDziennikUstaw(): Unit = {
+  def scrapDziennikUstaw(path: String): Unit = {
     val xs = scrapAllYear("wdu")
       .flatMap(scrapYear)
       .flatMap(scrapSection)
       .map(scrapDetails)
-    save("data/dziennik-ustaw/", xs)
+    save(path, xs)
   }
 
-  def scrapMonitorPolski(): Unit = {
+  def scrapMonitorPolski(path: String): Unit = {
     val xs = scrapAllYear("wmp")
       .flatMap(scrapYear)
       .flatMap(scrapSection)
       .map(scrapDetails)
-    save("data/monitor-polski/", xs)
+    save(path, xs)
   }
 
   def loadDocument(link: String): Document = {
@@ -83,7 +83,7 @@ object Isap {
   }
 
   def save(folder: String, xs: Seq[DziennikUstaw]): Unit = {
-    val writer = CSVWriter.open(new File(folder + "resources2.csv"))
+    val writer = CSVWriter.open(new File(folder + "/resources.csv"))
     writer.writeRow(List("id", "pdf"))
     xs.foreach(x => writer.writeRow(List(x.id, x.pdf.getOrElse(""))))
     writer.close()
