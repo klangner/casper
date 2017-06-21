@@ -35,7 +35,7 @@ object PdfParser {
     } else {
       val renderer = new PDFRenderer(pdf)
       0.until(pdf.getNumberOfPages).foreach{ i =>
-        val image = renderer.renderImage(i)
+        val image = renderer.renderImage(i, 5)
         val imageFile = new File(file.getAbsolutePath.replace(".pdf", "-%d.png".format(i+1)))
         ImageIO.write(image, "PNG", imageFile)
       }

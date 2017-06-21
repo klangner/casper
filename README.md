@@ -36,3 +36,8 @@
 
 ### Tworzenie bazy wiedzy
  * Utworzenie indeksu
+ 
+ 
+## Zewnętrzne programy
+ 
+ * OCR - sudo apt-get install tesseract-ocr-pol
