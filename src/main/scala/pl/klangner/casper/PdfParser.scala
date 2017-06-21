@@ -14,7 +14,13 @@ import org.apache.pdfbox.rendering.PDFRenderer
 object PdfParser {
 
   def parseAllFiles(folder: String): Unit = {
-    parseFile(new File("data/test/WDU19180010001.pdf"))
+    val files = recursiveListFiles(new File(folder)).filter(_.getName.endsWith(".pdf"))
+    files.foreach(parseFile)
+  }
+
+  def recursiveListFiles(f: File): Seq[File] = {
+    val these = f.listFiles
+    these ++ these.filter(_.isDirectory).flatMap(recursiveListFiles)
   }
 
   def parseFile(file: File): Unit = {
@@ -22,7 +28,6 @@ object PdfParser {
     val text = new PDFTextStripper().getText(pdf).trim()
 
     if(text.length > 0){
-      println("text [%s]".format(text))
       val textFile = new File(file.getAbsolutePath.replace(".pdf", ".txt"))
       val writer = new BufferedWriter(new FileWriter(textFile))
       writer.write(text)
